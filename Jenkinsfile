@@ -28,9 +28,29 @@ pipeline {
        
       }
     } 
-     stage ('Deploy') {
+     stage ('Create image')
+      {
+        agent {label "DockerDeploy"}
        steps {
-         sh '/var/lib/jenkins/.local/bin/eb deploy  url-shortner-main-dev'
+         sh '''
+         docker build --tag url-shortner:v1 .
+         docker tag url-shortner:v1 michaelblasse/url-shortner:latest
+         docker push michaelblasse/urlshortner:latest
+         '''
+       }
+     }
+          stage ('Deploy to ecs')
+      {
+        agent {label "TerraformDeploy"}
+       steps {
+        withCredentials([string(credentialsId: 'AWS_ACCESS_KEY', variable: 'aws_access_key'),string(credentialsId: 'AWS_SECRET_KEY', variable: 'aws_secret_key')])
+        {dir("initTerraform"){
+          sh '''
+         terraform init
+         terraform plan -out plan.tfplan -var="aws_access_key=$aws_access_key" -var="aws_secret_key=$aws_secret_key
+         terraform apply plan.tfplan
+         '''
+        }}
        }
      }
      stage ('Email_Confirmation'){
