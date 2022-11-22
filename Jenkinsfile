@@ -33,7 +33,7 @@ pipeline {
         agent {label "DockerDeploy"}
        steps {
          sh '''
-         docker build --tag url-shortner:v1 .
+         sudo docker build --tag url-shortner:v1 .
          sudo docker tag url-shortner:v1 michaelblasse/url-shortner:latest
          sudo docker push michaelblasse/urlshortner:latest
          '''
