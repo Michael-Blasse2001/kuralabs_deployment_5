@@ -81,6 +81,7 @@ pipeline {
                             }
          }
        }
+      }
      stage ('Email_Confirmation'){
        steps{
          emailext body: 'Build confirmed',
