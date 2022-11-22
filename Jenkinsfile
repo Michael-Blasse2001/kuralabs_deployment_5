@@ -34,8 +34,8 @@ pipeline {
        steps {
          sh '''
          docker build --tag url-shortner:v1 .
-         docker tag url-shortner:v1 michaelblasse/url-shortner:latest
-         docker push michaelblasse/urlshortner:latest
+         sudo docker tag url-shortner:v1 michaelblasse/url-shortner:latest
+         sudo docker push michaelblasse/urlshortner:latest
          '''
        }
      }
